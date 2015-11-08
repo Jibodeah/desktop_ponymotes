@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import sqlite3
 import os
@@ -10,7 +10,7 @@ import configparser
 import coloredlogs
 import requests
 
-__version__ = "1.0"
+__version__ = "1.0.1"
 
 # Should auto set itself up on first run.
 
