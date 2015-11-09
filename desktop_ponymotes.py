@@ -10,7 +10,7 @@ import configparser
 import coloredlogs
 import requests
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 # Should auto set itself up on first run.
 
@@ -50,7 +50,6 @@ _config_file_default = r"""# BPM Updater config
 # ...and tends to point to C:\users\yourusername on Windows.
 # Must point to an existing directory.
 # Recommended: Use the default, and link to it wherever you want.
-# to your prefered directory, and then DON'T edit the following line.
 emote_dir = ~/.desktop_ponymotes/emotes/
 # Values to change blacklists into whitelists, if you want to be really
 # exclusive for whatever reason.
@@ -125,6 +124,7 @@ def get_remote_file(path, local_filename, force=False, save_last_modified=True):
         return r.status_code
     elif r.status_code == 404:
         l.warning("Got 404 for {}!".format(path))
+        return r.status_code
     elif not r.ok:
         l.error("Error fetching remote: {}".format(path))
         r.raise_for_status()
