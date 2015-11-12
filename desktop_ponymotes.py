@@ -30,7 +30,7 @@ user_agent = "jibodeah.desktop_ponymotes"
 _debug_levels = {
     "critical" : logging.CRITICAL,
     "error" : logging.ERROR,
-    "warning" : logging.warning,
+    "warning" : logging.WARNING,
     "info" : logging.INFO,
     "debug" : logging.DEBUG,
 }
