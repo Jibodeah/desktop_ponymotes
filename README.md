@@ -26,6 +26,14 @@
 
 ## FAQ
 
+### I downloaded desktop_ponymotes.py... What is this? How do I run it?
+
+This is a python script. It needs to be run with python (3.3 or above). This means to use it you need to [install python](https://www.python.org/downloads/) first.
+
+Don't forget the third party python modules! You need to install them with `pip` python's packaging tool.
+
+*Then* you can run the script. You do this in a command prompt by running `python desktop_ponymotes.py` (Or `python.exe desktop_ponymotes.py` or similar on Windows. On 'nix you should be able to make the file executable and then just run it directly.)
+
 ### I accidentally deleted a few emotes from my library! Can I download only the ones I'm missing?
 
 Yes! Simply run the program with the options `-f --skip-already-downloaded`.
@@ -35,6 +43,16 @@ Yes! Simply run the program with the options `-f --skip-already-downloaded`.
 Set `allow_nsfw` to `true` in config.ini. The line should then read:
 
     allow_nsfw = true
+
+### What are the command line options?
+
+Run the script with the option `--help` to see all available command line options.
+
+### How do I use the config file? (config.ini)
+
+There are comments (The lines beginning with `#`) that tell you how to configure it. All should be explained by these.
+
+...If you're still unsure, feel free to ask.
 
 ## Special Thanks
 
