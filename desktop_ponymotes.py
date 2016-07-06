@@ -310,11 +310,14 @@ if __name__ == "__main__":
     finally:
         if os.path.isfile(db_file + '.old'):
             os.remove(db_file + '.old')
+    l.info("Checking for removed emotes...")
     removed = get_removed_emotes(list(e[0] for e in get_emotes(db)))
     if removed: # Not empty
         for e in removed:
             os.rename("{}{}.png".format(config[_CONFIG_SECTION_BASIC]['emote_dir'], e),
                   "{}archive/{}.png".format(config[_CONFIG_SECTION_BASIC]['emote_dir'], e))
-        l.info("{} {} moved to archive.".format(len(removed),
-            'emote' if len(removed) == 1 else 'emotes'))
+        l.info("{} emote{} moved to archive.".format(len(removed),
+            '' if len(removed) == 1 else 's'))
+    else:
+        l.info("...none!")
     l.info("All done!")

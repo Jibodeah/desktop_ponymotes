@@ -54,6 +54,10 @@ There are comments (The lines beginning with `#`) that tell you how to configure
 
 ...If you're still unsure, feel free to ask.
 
+## How does it handle animated emotes?
+
+Unfortunately, a static PNG image of the first frame only is downloaded. A limitation of the backend.
+
 ## Special Thanks
 
 * DinsFire, for allowing me to use the backend he built for his [PonyMotes Android App](http://dinsfire.com/projects/reddit-emotes/)
