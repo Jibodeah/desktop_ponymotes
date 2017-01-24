@@ -263,7 +263,7 @@ if __name__ == "__main__":
         l.warning("Config file not found! Remaking from default...")
         make_default_config()
         if not config.read(config_file):
-            l.critical("Error remaking and reading config file!")
+            l.error("Error remaking and reading config file!")
             raise RuntimeError("Could not load nor remake and read config.")
     try:
         config.items(_CONFIG_SECTION_BASIC)
@@ -272,13 +272,13 @@ if __name__ == "__main__":
         config.items(_CONFIG_SECTION_TAGS)
         config.items(_CONFIG_SECTION_SUBREDDITS)
     except configparser.Error as e:
-        l.critical("Config file appears to be corrupt!")
-        l.exception("Information:")
-        l.critical("You could delete it to refresh it to defaults.")
+        l.exception(
+            "Config file appears to be corrupt! You could delete it to refresh it to defaults."
+        )
         sys.exit(-1)
     # Config sanity checking:
     if not os.path.isdir(os.path.expanduser(config[_CONFIG_SECTION_BASIC]['emote_dir'])):
-        l.critical("Error parsing config: {} is not a directory!".format(
+        l.error("Error parsing config: {} is not a directory!".format(
             config[_CONFIG_SECTION_BASIC]['emote_dir']))
         sys.exit(-1)
     emote_dir = config[_CONFIG_SECTION_BASIC]['emote_dir']
@@ -301,9 +301,13 @@ if __name__ == "__main__":
                             old_db=None if args.force else old_db,
                             skip_already_downloaded=args.skip_already_downloaded)
         l.info("Found {} new/updated emotes!".format(len(emotes)))
+        total_emotes = len(emotes)
+        digits = len(str(total_emotes))
         for i, e in enumerate(emotes):
-            total_emotes = len(emotes)
-            l.info("Downloading {}.png ({}/{})".format(e[0], i + 1, total_emotes))
+            l.info("[{}/{}] Downloading {}.png".format(
+                str(i + 1).rjust(digits),
+                total_emotes, e[0]),
+            )
             get_remote_file("/emoteCache/{}.png".format(e[0]),
                             ''.join([config[_CONFIG_SECTION_BASIC]['emote_dir'] , e[0], '.png']),
                             save_last_modified=False)
