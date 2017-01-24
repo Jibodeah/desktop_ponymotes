@@ -10,7 +10,7 @@ import configparser
 import coloredlogs
 import requests
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 # Should auto set itself up on first run.
 
