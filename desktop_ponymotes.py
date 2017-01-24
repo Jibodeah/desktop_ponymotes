@@ -28,11 +28,11 @@ user_agent = "jibodeah.desktop_ponymotes"
 # Also config, which is created by main.
 
 _debug_levels = {
-    "critical" : logging.CRITICAL,
-    "error" : logging.ERROR,
-    "warning" : logging.WARNING,
-    "info" : logging.INFO,
-    "debug" : logging.DEBUG,
+    "critical": logging.CRITICAL,
+    "error": logging.ERROR,
+    "warning": logging.WARNING,
+    "info": logging.INFO,
+    "debug": logging.DEBUG,
 }
 
 _CONFIG_SECTION_BASIC = "Basic Config"
@@ -85,8 +85,13 @@ allow_nonpony = true
 # Example: (If you hate bananas)
 # mylittlenanners
 # (Although in that case you'd be better off blacklisting the 'banana' tag)
-""".format(_CONFIG_SECTION_BASIC, _CONFIG_SECTION_FILTERS, _CONFIG_SECTION_EMOTES,
-           _CONFIG_SECTION_TAGS, _CONFIG_SECTION_SUBREDDITS)
+""".format(
+    _CONFIG_SECTION_BASIC,
+    _CONFIG_SECTION_FILTERS,
+    _CONFIG_SECTION_EMOTES,
+    _CONFIG_SECTION_TAGS,
+    _CONFIG_SECTION_SUBREDDITS
+)
 
 def first_run_setup():
     os.mkdir(config_dir_path)
@@ -103,7 +108,7 @@ def make_default_config():
 
 def get_remote_file(path, local_filename, force=False, save_last_modified=True):
     """Fetches a remote file from dinsfire.com
-    
+
     path: Path to remote file, relative to dinsfire.com.
         Ex.: for dinsfire.com/emoteCache/emote.png, pass /emoteCache/emote.png
     local_filename: The local filename to save to.
@@ -112,9 +117,12 @@ def get_remote_file(path, local_filename, force=False, save_last_modified=True):
         was last modified. To use when fetching the same file again.
         (Default: True)
     """
-    h = {"user-agent" : user_agent + "/{}".format(__version__)}
-    timestamp_filename = ''.join([os.path.dirname(local_filename), last_modify_prefix,
-                                  os.path.basename(local_filename)])
+    h = {"user-agent": user_agent + "/{}".format(__version__)}
+    timestamp_filename = ''.join([
+        os.path.dirname(local_filename),
+        last_modify_prefix,
+        os.path.basename(local_filename)
+    ])
     if os.path.isfile(timestamp_filename) and not force:
         with open(timestamp_filename, "r") as f:
             h["If-Modified-Since"] = f.read().strip()
@@ -160,7 +168,7 @@ def update_database(force=False):
 
 def get_emotes(db, old_db=None, skip_already_downloaded=False):
     """Return a list of emote names that pass the filter.
-    
+
     db: A sqlite3.connection to the emote database.
     old_db: A sqlite3.connection to the old version of the database.
         When supplied, the function will return only updated emotes.
@@ -172,7 +180,7 @@ def get_emotes(db, old_db=None, skip_already_downloaded=False):
     q = "SELECT emoteName, dateModified FROM mobileEmotes" # Base query
     w = [] # WHERE causes, with params replaced with `?`
     p = [] # list corresponding to param variables (Cast to tuple later)
-    
+
     if not config[_CONFIG_SECTION_FILTERS].getboolean('allow_nsfw'):
         w.append("isNSFW = ?")
         p.append(0)
@@ -236,16 +244,26 @@ def get_removed_emotes(emotes):
 
 if __name__ == "__main__":
     argument_parser = argparse.ArgumentParser()
-    argument_parser.add_argument("--log-level", help="Logging level to use.",
-                                choices=_debug_levels.keys(), default='info')
-    argument_parser.add_argument("--force", "-f", help="Force fresh download of all emotes.",
-                                 action="store_true")
-    argument_parser.add_argument("--skip-already-downloaded",
-                                 help="Skip emotes that already exist on disk.\
-                                 (This is useful if you accidentally deleted an emote or two)",
-                                 action="store_true")
+    argument_parser.add_argument(
+        "--log-level",
+        help="Logging level to use.",
+        choices=_debug_levels.keys(),
+        default='info',
+    )
+    argument_parser.add_argument(
+        "--force",
+        "-f",
+        help="Force fresh download of all emotes.",
+        action="store_true",
+    )
+    argument_parser.add_argument(
+        "--skip-already-downloaded",
+        help="Skip emotes that already exist on disk. "
+        "(This is useful if you accidentally deleted an emote or two)",
+        action="store_true",
+    )
     args = argument_parser.parse_args()
-    
+
     coloredlogs.set_level(_debug_levels[args.log_level])
     l.info("Desktop PonyMotes {} running!".format(__version__))
     if not os.path.isdir(config_dir_path):
@@ -309,7 +327,7 @@ if __name__ == "__main__":
                 total_emotes, e[0]),
             )
             get_remote_file("/emoteCache/{}.png".format(e[0]),
-                            ''.join([config[_CONFIG_SECTION_BASIC]['emote_dir'] , e[0], '.png']),
+                            ''.join([config[_CONFIG_SECTION_BASIC]['emote_dir'], e[0], '.png']),
                             save_last_modified=False)
     finally:
         if os.path.isfile(db_file + '.old'):
@@ -318,10 +336,14 @@ if __name__ == "__main__":
     removed = get_removed_emotes(list(e[0] for e in get_emotes(db)))
     if removed: # Not empty
         for e in removed:
-            os.rename("{}{}.png".format(config[_CONFIG_SECTION_BASIC]['emote_dir'], e),
-                  "{}archive/{}.png".format(config[_CONFIG_SECTION_BASIC]['emote_dir'], e))
-        l.info("{} emote{} moved to archive.".format(len(removed),
-            '' if len(removed) == 1 else 's'))
+            os.rename(
+                "{}{}.png".format(config[_CONFIG_SECTION_BASIC]['emote_dir'], e),
+                "{}archive/{}.png".format(config[_CONFIG_SECTION_BASIC]['emote_dir'], e),
+            )
+        l.info("{} emote{} moved to archive.".format(
+            len(removed),
+            '' if len(removed) == 1 else 's')
+        )
     else:
         l.info("...none!")
     l.info("All done!")
