@@ -6,6 +6,7 @@ import logging
 import argparse
 import sys
 import configparser
+import concurrent.futures
 
 import coloredlogs
 import requests
@@ -321,14 +322,24 @@ if __name__ == "__main__":
         l.info("Found {} new/updated emotes!".format(len(emotes)))
         total_emotes = len(emotes)
         digits = len(str(total_emotes))
-        for i, e in enumerate(emotes):
-            l.info("[{}/{}] Downloading {}.png".format(
-                str(i + 1).rjust(digits),
-                total_emotes, e[0]),
+        def download_emote(emote):
+            """A single job to download an emote
+            emote:The emote name"""
+            get_remote_file(
+                "/emoteCache/{}.png".format(emote[0]),
+                "".join([config[_CONFIG_SECTION_BASIC]["emote_dir"], emote[0], ".png"]),
+                save_last_modified=False,
             )
-            get_remote_file("/emoteCache/{}.png".format(e[0]),
-                            ''.join([config[_CONFIG_SECTION_BASIC]['emote_dir'], e[0], '.png']),
-                            save_last_modified=False)
+            return emote
+
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            for i, emote in enumerate(executor.map(download_emote, emotes)):
+                l.info(
+                    "[{}/{}] Downloaded {}.png".format(
+                        str(i + 1).rjust(digits), total_emotes, emote[0]
+                    )
+                )
     finally:
         if os.path.isfile(db_file + '.old'):
             os.remove(db_file + '.old')
