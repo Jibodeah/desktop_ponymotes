@@ -11,7 +11,7 @@ import concurrent.futures
 import coloredlogs
 import requests
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 
 # Should auto set itself up on first run.
 
